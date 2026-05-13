@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Hoja de Vida</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ── ENCABEZADO ─────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="logo">
+      <span class="logo-icon">📄</span>
+      Generador de Hoja de Vida
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline btn-sm" id="btn-guardar" onclick="guardarCV()">
+        💾 Guardar
+      </button>
+      <button class="btn btn-success btn-sm" id="btn-ver-cv" style="display:none" onclick="verCV()">
+        👁 Ver CV completo
+      </button>
+    </div>
+  </header>
+
+  <!-- ── PANEL DEL FORMULARIO ───────────────────────────── -->
+  <main class="panel-formulario">
+
+    <!-- URL del CV (aparece tras guardar) -->
+    <div id="url-box" style="display:none" class="url-box">
+      <span class="url-texto" id="url-texto"></span>
+      <button class="btn-copiar" onclick="copiarURL()">📋 Copiar</button>
+      <a class="btn btn-primary btn-sm" id="url-enlace" target="_blank">Abrir</a>
+    </div>
+
+    <!-- Barra de progreso por pasos -->
+    <div class="pasos-barra" id="pasos-barra">
+      <button class="paso-btn activo" data-paso="0" onclick="irPaso(0)">👤 Personal</button>
+      <button class="paso-btn" data-paso="1" onclick="irPaso(1)">💼 Experiencia</button>
+      <button class="paso-btn" data-paso="2" onclick="irPaso(2)">🎓 Formación</button>
+      <button class="paso-btn" data-paso="3" onclick="irPaso(3)">⚡ Habilidades</button>
+      <button class="paso-btn" data-paso="4" onclick="irPaso(4)">🌍 Idiomas</button>
+      <button class="paso-btn" data-paso="5" onclick="irPaso(5)">➕ Adicional</button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 0: DATOS PERSONALES
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card activa" id="paso-0">
+      <h2 class="seccion-titulo"><span class="icon">👤</span> Datos Personales</h2>
+
+      <!-- Foto de perfil -->
+      <div class="form-grupo" style="margin-bottom:20px">
+        <label>Foto de Perfil</label>
+        <div class="foto-uploader">
+          <div class="foto-preview" id="foto-preview">👤</div>
+          <div>
+            <button class="btn-foto" onclick="document.getElementById('input-foto').click()">
+              📷 Subir foto
+            </button>
+            <input type="file" id="input-foto" accept="image/*" onchange="procesarFoto(this)">
+            <p style="font-size:.75rem;color:var(--gray-400);margin-top:6px">JPG, PNG. Máx 2MB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label>Nombres <span class="requerido">*</span></label>
+          <input type="text" id="nombres" placeholder="Ej: María Fernanda" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>Apellidos <span class="requerido">*</span></label>
+          <input type="text" id="apellidos" placeholder="Ej: González López" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo span-2">
+          <label>Título Profesional</label>
+          <input type="text" id="titulo" placeholder="Ej: Desarrolladora de Software Senior" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>Teléfono</label>
+          <input type="tel" id="telefono" placeholder="+57 300 123 4567" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>Correo Electrónico</label>
+          <input type="email" id="correo" placeholder="tu@correo.com" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>Ciudad</label>
+          <input type="text" id="ciudad" placeholder="Bogotá" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>País</label>
+          <input type="text" id="pais" placeholder="Colombia" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>LinkedIn (URL)</label>
+          <input type="url" id="linkedin" placeholder="https://linkedin.com/in/tu-perfil" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo">
+          <label>Portafolio (URL)</label>
+          <input type="url" id="portafolio" placeholder="https://mi-portafolio.com" oninput="actualizarPreview()">
+        </div>
+        <div class="form-grupo span-2">
+          <label>Perfil Profesional (resumen de 3 a 5 líneas)</label>
+          <textarea id="resumen" rows="5" placeholder="Profesional con X años de experiencia en... Especializado en... Orientado a..." oninput="actualizarPreview()"></textarea>
+        </div>
+      </div>
+
+      <div class="nav-pasos">
+        <span></span>
+        <button class="btn btn-primary" onclick="siguientePaso()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 1: EXPERIENCIA LABORAL
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card" id="paso-1">
+      <h2 class="seccion-titulo"><span class="icon">💼</span> Experiencia Laboral</h2>
+      <div class="items-lista" id="lista-experiencia"></div>
+      <button class="btn-agregar" onclick="agregarExperiencia()">+ Agregar empleo</button>
+      <div class="nav-pasos">
+        <button class="btn btn-outline" onclick="anteriorPaso()">← Anterior</button>
+        <button class="btn btn-primary" onclick="siguientePaso()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 2: FORMACIÓN ACADÉMICA
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card" id="paso-2">
+      <h2 class="seccion-titulo"><span class="icon">🎓</span> Formación Académica</h2>
+      <div class="items-lista" id="lista-formacion"></div>
+      <button class="btn-agregar" onclick="agregarFormacion()">+ Agregar estudio</button>
+      <div class="nav-pasos">
+        <button class="btn btn-outline" onclick="anteriorPaso()">← Anterior</button>
+        <button class="btn btn-primary" onclick="siguientePaso()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 3: HABILIDADES
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card" id="paso-3">
+      <h2 class="seccion-titulo"><span class="icon">⚡</span> Habilidades</h2>
+      <div class="form-grid cols-3">
+        <div class="form-grupo">
+          <label>Habilidad</label>
+          <input type="text" id="hab-nombre" placeholder="Ej: JavaScript">
+        </div>
+        <div class="form-grupo">
+          <label>Tipo</label>
+          <select id="hab-tipo">
+            <option value="tecnica">Técnica</option>
+            <option value="blanda">Blanda</option>
+          </select>
+        </div>
+        <div class="form-grupo">
+          <label>Nivel</label>
+          <select id="hab-nivel">
+            <option value="basico">Básico</option>
+            <option value="intermedio" selected>Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="agregarHabilidad()">+ Agregar habilidad</button>
+      <div class="chips-wrapper" id="lista-habilidades"></div>
+
+      <div class="nav-pasos">
+        <button class="btn btn-outline" onclick="anteriorPaso()">← Anterior</button>
+        <button class="btn btn-primary" onclick="siguientePaso()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 4: IDIOMAS
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card" id="paso-4">
+      <h2 class="seccion-titulo"><span class="icon">🌍</span> Idiomas</h2>
+      <div class="form-grid cols-3">
+        <div class="form-grupo">
+          <label>Idioma</label>
+          <input type="text" id="idioma-nombre" placeholder="Ej: Inglés">
+        </div>
+        <div class="form-grupo">
+          <label>Nivel (Marco Europeo)</label>
+          <select id="idioma-nivel">
+            <option value="A1">A1 – Principiante</option>
+            <option value="A2">A2 – Básico</option>
+            <option value="B1" selected>B1 – Intermedio</option>
+            <option value="B2">B2 – Intermedio Alto</option>
+            <option value="C1">C1 – Avanzado</option>
+            <option value="C2">C2 – Maestría</option>
+            <option value="Nativo">Nativo</option>
+          </select>
+        </div>
+        <div class="form-grupo">
+          <label>Certificación (opcional)</label>
+          <input type="text" id="idioma-cert" placeholder="Ej: IELTS 7.0, TOEFL 100">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="agregarIdioma()">+ Agregar idioma</button>
+      <div class="chips-wrapper" id="lista-idiomas"></div>
+
+      <div class="nav-pasos">
+        <button class="btn btn-outline" onclick="anteriorPaso()">← Anterior</button>
+        <button class="btn btn-primary" onclick="siguientePaso()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         PASO 5: SECCIONES ADICIONALES
+    ════════════════════════════════════════════════ -->
+    <div class="seccion-card" id="paso-5">
+      <h2 class="seccion-titulo"><span class="icon">➕</span> Secciones Adicionales</h2>
+      <p style="font-size:.85rem;color:var(--gray-400);margin-bottom:16px">
+        Cursos, herramientas digitales, voluntariados, datos de interés (todos opcionales).
+      </p>
+
+      <div class="form-grid">
+        <div class="form-grupo">
+          <label>Tipo</label>
+          <select id="adic-tipo">
+            <option value="curso">Curso / Certificación</option>
+            <option value="herramienta">Herramienta Digital</option>
+            <option value="voluntariado">Voluntariado</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-grupo">
+          <label>Título</label>
+          <input type="text" id="adic-titulo" placeholder="Ej: AWS Cloud Practitioner">
+        </div>
+        <div class="form-grupo">
+          <label>Fecha (opcional)</label>
+          <input type="text" id="adic-fecha" placeholder="Ej: 2023, Ene 2024">
+        </div>
+        <div class="form-grupo">
+          <label>Descripción (opcional)</label>
+          <input type="text" id="adic-descripcion" placeholder="Breve descripción">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="agregarAdicional()">+ Agregar</button>
+      <div class="items-lista" id="lista-adicionales" style="margin-top:16px"></div>
+
+      <div class="nav-pasos">
+        <button class="btn btn-outline" onclick="anteriorPaso()">← Anterior</button>
+        <button class="btn btn-success" onclick="guardarCV()">
+          💾 Guardar y obtener enlace
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── PANEL DE VISTA PREVIA ──────────────────────────── -->
+  <aside class="panel-preview">
+    <div class="panel-preview-header">Vista previa en tiempo real</div>
+    <iframe class="preview-iframe" id="preview-iframe" src="about:blank"></iframe>
+  </aside>
+
+</div><!-- /.app-layout -->
+
+<!-- Toast de notificaciones -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     JAVASCRIPT — Lógica completa del formulario
+════════════════════════════════════════════════════════ -->
+<script>
+/* ── Estado global de la aplicación ─────────────────────── */
+const estado = {
+  codigo:      null,   // Código único del CV
+  pasoActual:  0,
+  pasosTotal:  6,
+  habilidades: [],
+  idiomas:     [],
+  adicionales: [],
+};
+
+/* ─────────────────────────────────────────────────────────
+   INICIALIZACIÓN
+───────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  // Verificar si hay un código en la URL para cargar un CV existente
+  const params = new URLSearchParams(window.location.search);
+  const codigo = params.get('id');
+  if (codigo) {
+    cargarCV(codigo);
+  }
+
+  // Ajustar el zoom del iframe de preview
+  ajustarZoomPreview();
+  window.addEventListener('resize', ajustarZoomPreview);
+
+  // Agregar un empleo y un estudio vacíos por defecto
+  agregarExperiencia();
+  agregarFormacion();
+
+  actualizarPreview();
+});
+
+/* ─────────────────────────────────────────────────────────
+   NAVEGACIÓN ENTRE PASOS
+───────────────────────────────────────────────────────── */
+function irPaso(num) {
+  // Guardar automáticamente al cambiar de paso (si ya existe código)
+  if (estado.codigo) guardarCV(true);
+
+  // Ocultar paso actual
+  document.getElementById(`paso-${estado.pasoActual}`).classList.remove('activa');
+  document.querySelector(`.paso-btn[data-paso="${estado.pasoActual}"]`).classList.remove('activo');
+
+  // Marcar paso anterior como completado
+  document.querySelector(`.paso-btn[data-paso="${estado.pasoActual}"]`).classList.add('completado');
+
+  // Activar nuevo paso
+  estado.pasoActual = num;
+  document.getElementById(`paso-${num}`).classList.add('activa');
+  document.querySelector(`.paso-btn[data-paso="${num}"]`).classList.remove('completado');
+  document.querySelector(`.paso-btn[data-paso="${num}"]`).classList.add('activo');
+
+  actualizarPreview();
+}
+
+function siguientePaso() {
+  if (estado.pasoActual < estado.pasosTotal - 1) irPaso(estado.pasoActual + 1);
+}
+
+function anteriorPaso() {
+  if (estado.pasoActual > 0) irPaso(estado.pasoActual - 1);
+}
+
+/* ─────────────────────────────────────────────────────────
+   FOTO DE PERFIL
+───────────────────────────────────────────────────────── */
+function procesarFoto(input) {
+  const archivo = input.files[0];
+  if (!archivo) return;
+
+  if (archivo.size > 2 * 1024 * 1024) {
+    mostrarToast('La foto no debe superar 2MB.', 'error');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('foto-preview');
+    preview.innerHTML = `<img src="${e.target.result}" alt="Foto">`;
+    actualizarPreview();
+  };
+  reader.readAsDataURL(archivo);
+}
+
+/* ─────────────────────────────────────────────────────────
+   EXPERIENCIA LABORAL — Items dinámicos
+───────────────────────────────────────────────────────── */
+let idExpCounter = 0;
+
+function agregarExperiencia() {
+  const id = idExpCounter++;
+  const lista = document.getElementById('lista-experiencia');
+
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = `exp-${id}`;
+  div.innerHTML = `
+    <div class="item-card-header">
+      <span class="item-card-titulo">Empleo #${lista.children.length + 1}</span>
+      <button class="btn-eliminar" onclick="eliminarItem('exp-${id}')" title="Eliminar">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-grupo">
+        <label>Cargo <span class="requerido">*</span></label>
+        <input type="text" class="exp-cargo" placeholder="Ej: Desarrollador Frontend" oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo">
+        <label>Empresa <span class="requerido">*</span></label>
+        <input type="text" class="exp-empresa" placeholder="Ej: Tech Solutions S.A.S." oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo">
+        <label>Ubicación</label>
+        <input type="text" class="exp-ubicacion" placeholder="Bogotá, Colombia" oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo">
+        <label>Fecha de inicio</label>
+        <input type="date" class="exp-inicio" oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo">
+        <label>Fecha de fin</label>
+        <input type="date" class="exp-fin" oninput="actualizarPreview()" id="exp-fin-${id}">
+      </div>
+      <div class="form-grupo" style="display:flex;align-items:center;padding-top:22px">
+        <label class="checkbox-actual">
+          <input type="checkbox" class="exp-actual" onchange="toggleActual(this,'exp-fin-${id}')" oninput="actualizarPreview()">
+          Trabajo actual
+        </label>
+      </div>
+      <div class="form-grupo span-2">
+        <label>Responsabilidades y funciones</label>
+        <textarea class="exp-responsabilidades" rows="3" placeholder="Describe tus principales responsabilidades..." oninput="actualizarPreview()"></textarea>
+      </div>
+      <div class="form-grupo span-2">
+        <label>Logros destacados</label>
+        <textarea class="exp-logros" rows="2" placeholder="Ej: Reduje el tiempo de carga en un 40%..." oninput="actualizarPreview()"></textarea>
+      </div>
+    </div>
+  `;
+  lista.appendChild(div);
+}
+
+function toggleActual(checkbox, idFin) {
+  document.getElementById(idFin).disabled = checkbox.checked;
+  if (checkbox.checked) document.getElementById(idFin).value = '';
+  actualizarPreview();
+}
+
+/* ─────────────────────────────────────────────────────────
+   FORMACIÓN ACADÉMICA — Items dinámicos
+───────────────────────────────────────────────────────── */
+let idFormCounter = 0;
+
+function agregarFormacion() {
+  const id = idFormCounter++;
+  const lista = document.getElementById('lista-formacion');
+
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = `form-${id}`;
+  div.innerHTML = `
+    <div class="item-card-header">
+      <span class="item-card-titulo">Estudio #${lista.children.length + 1}</span>
+      <button class="btn-eliminar" onclick="eliminarItem('form-${id}')" title="Eliminar">✕</button>
+    </div>
+    <div class="form-grid cols-3">
+      <div class="form-grupo span-2">
+        <label>Título obtenido <span class="requerido">*</span></label>
+        <input type="text" class="form-titulo" placeholder="Ej: Ingeniería de Sistemas" oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo">
+        <label>Año de graduación</label>
+        <input type="number" class="form-anio" min="1950" max="2099" placeholder="2022" oninput="actualizarPreview()">
+      </div>
+      <div class="form-grupo span-3">
+        <label>Institución <span class="requerido">*</span></label>
+        <input type="text" class="form-inst" placeholder="Ej: Universidad Nacional de Colombia" oninput="actualizarPreview()">
+      </div>
+    </div>
+  `;
+  lista.appendChild(div);
+}
+
+/* ─────────────────────────────────────────────────────────
+   HABILIDADES — Chips
+───────────────────────────────────────────────────────── */
+function agregarHabilidad() {
+  const nombre = document.getElementById('hab-nombre').value.trim();
+  if (!nombre) { mostrarToast('Escribe el nombre de la habilidad.', 'error'); return; }
+
+  const tipo  = document.getElementById('hab-tipo').value;
+  const nivel = document.getElementById('hab-nivel').value;
+
+  estado.habilidades.push({ nombre, tipo, nivel });
+  renderHabilidades();
+  document.getElementById('hab-nombre').value = '';
+  actualizarPreview();
+}
+
+function renderHabilidades() {
+  const lista = document.getElementById('lista-habilidades');
+  lista.innerHTML = '';
+
+  const nivelLabel = { basico: 'Básico', intermedio: 'Intermedio', avanzado: 'Avanzado' };
+  const tipoLabel  = { tecnica: 'Técnica', blanda: 'Blanda' };
+
+  estado.habilidades.forEach((h, i) => {
+    const chip = document.createElement('span');
+    chip.className = `chip chip-${h.tipo} chip-${h.nivel}`;
+    chip.innerHTML = `${h.nombre} <small>(${tipoLabel[h.tipo]} · ${nivelLabel[h.nivel]})</small>
+      <span class="chip-del" onclick="eliminarHabilidad(${i})" title="Eliminar">✕</span>`;
+    lista.appendChild(chip);
+  });
+}
+
+function eliminarHabilidad(idx) {
+  estado.habilidades.splice(idx, 1);
+  renderHabilidades();
+  actualizarPreview();
+}
+
+/* ─────────────────────────────────────────────────────────
+   IDIOMAS — Chips
+───────────────────────────────────────────────────────── */
+function agregarIdioma() {
+  const idioma = document.getElementById('idioma-nombre').value.trim();
+  if (!idioma) { mostrarToast('Escribe el nombre del idioma.', 'error'); return; }
+
+  const nivel        = document.getElementById('idioma-nivel').value;
+  const certificacion = document.getElementById('idioma-cert').value.trim();
+
+  estado.idiomas.push({ idioma, nivel, certificacion });
+  renderIdiomas();
+  document.getElementById('idioma-nombre').value = '';
+  document.getElementById('idioma-cert').value   = '';
+  actualizarPreview();
+}
+
+function renderIdiomas() {
+  const lista = document.getElementById('lista-idiomas');
+  lista.innerHTML = '';
+
+  estado.idiomas.forEach((i, idx) => {
+    const chip = document.createElement('span');
+    chip.className = 'chip chip-tecnica chip-intermedio';
+    chip.innerHTML = `${i.idioma} <small>${i.nivel}${i.certificacion ? ' · ' + i.certificacion : ''}</small>
+      <span class="chip-del" onclick="eliminarIdioma(${idx})">✕</span>`;
+    lista.appendChild(chip);
+  });
+}
+
+function eliminarIdioma(idx) {
+  estado.idiomas.splice(idx, 1);
+  renderIdiomas();
+  actualizarPreview();
+}
+
+/* ─────────────────────────────────────────────────────────
+   SECCIONES ADICIONALES
+───────────────────────────────────────────────────────── */
+function agregarAdicional() {
+  const titulo = document.getElementById('adic-titulo').value.trim();
+  if (!titulo) { mostrarToast('Escribe el título.', 'error'); return; }
+
+  const tipo        = document.getElementById('adic-tipo').value;
+  const fecha       = document.getElementById('adic-fecha').value.trim();
+  const descripcion = document.getElementById('adic-descripcion').value.trim();
+
+  estado.adicionales.push({ tipo, titulo, fecha, descripcion });
+  renderAdicionales();
+
+  document.getElementById('adic-titulo').value      = '';
+  document.getElementById('adic-fecha').value       = '';
+  document.getElementById('adic-descripcion').value = '';
+  actualizarPreview();
+}
+
+function renderAdicionales() {
+  const lista = document.getElementById('lista-adicionales');
+  lista.innerHTML = '';
+
+  const tipoLabel = { curso: '📚 Curso', herramienta: '🔧 Herramienta', voluntariado: '🤝 Voluntariado', otro: '📌 Otro' };
+
+  estado.adicionales.forEach((a, idx) => {
+    const div = document.createElement('div');
+    div.className = 'item-card';
+    div.style.padding = '10px 14px';
+    div.innerHTML = `
+      <div class="item-card-header">
+        <span class="item-card-titulo">${tipoLabel[a.tipo] || a.tipo}: ${a.titulo}</span>
+        <button class="btn-eliminar" onclick="eliminarAdicional(${idx})">✕</button>
+      </div>
+      ${a.fecha ? `<p style="font-size:.8rem;color:var(--gray-400)">${a.fecha}</p>` : ''}
+      ${a.descripcion ? `<p style="font-size:.85rem">${a.descripcion}</p>` : ''}
+    `;
+    lista.appendChild(div);
+  });
+}
+
+function eliminarAdicional(idx) {
+  estado.adicionales.splice(idx, 1);
+  renderAdicionales();
+  actualizarPreview();
+}
+
+/* ─────────────────────────────────────────────────────────
+   FUNCIÓN GENÉRICA: eliminar item por ID
+───────────────────────────────────────────────────────── */
+function eliminarItem(id) {
+  const el = document.getElementById(id);
+  if (el) { el.remove(); actualizarPreview(); }
+}
+
+/* ─────────────────────────────────────────────────────────
+   RECOLECTAR DATOS DEL FORMULARIO
+───────────────────────────────────────────────────────── */
+function recolectarDatos() {
+  // Datos personales
+  const fotoEl = document.querySelector('#foto-preview img');
+  const personal = {
+    nombres:    document.getElementById('nombres').value.trim(),
+    apellidos:  document.getElementById('apellidos').value.trim(),
+    titulo:     document.getElementById('titulo').value.trim(),
+    telefono:   document.getElementById('telefono').value.trim(),
+    correo:     document.getElementById('correo').value.trim(),
+    ciudad:     document.getElementById('ciudad').value.trim(),
+    pais:       document.getElementById('pais').value.trim(),
+    linkedin:   document.getElementById('linkedin').value.trim(),
+    portafolio: document.getElementById('portafolio').value.trim(),
+    foto:       fotoEl ? fotoEl.src : '',
+    resumen:    document.getElementById('resumen').value.trim(),
+  };
+
+  // Experiencias
+  const experiencia = [];
+  document.querySelectorAll('#lista-experiencia .item-card').forEach(card => {
+    experiencia.push({
+      cargo:             card.querySelector('.exp-cargo')?.value.trim()             || '',
+      empresa:           card.querySelector('.exp-empresa')?.value.trim()           || '',
+      ubicacion:         card.querySelector('.exp-ubicacion')?.value.trim()         || '',
+      fecha_inicio:      card.querySelector('.exp-inicio')?.value                   || '',
+      fecha_fin:         card.querySelector('.exp-fin')?.value                      || '',
+      actual:            card.querySelector('.exp-actual')?.checked ? 1 : 0,
+      responsabilidades: card.querySelector('.exp-responsabilidades')?.value.trim() || '',
+      logros:            card.querySelector('.exp-logros')?.value.trim()            || '',
+    });
+  });
+
+  // Formación
+  const formacion = [];
+  document.querySelectorAll('#lista-formacion .item-card').forEach(card => {
+    formacion.push({
+      titulo_obtenido:  card.querySelector('.form-titulo')?.value.trim() || '',
+      institucion:      card.querySelector('.form-inst')?.value.trim()   || '',
+      anio_graduacion:  card.querySelector('.form-anio')?.value          || '',
+    });
+  });
+
+  return {
+    codigo:      estado.codigo || '',
+    personal,
+    experiencia,
+    formacion,
+    habilidades: estado.habilidades,
+    idiomas:     estado.idiomas,
+    adicionales: estado.adicionales,
+  };
+}
+
+/* ─────────────────────────────────────────────────────────
+   GUARDAR CV EN EL SERVIDOR
+───────────────────────────────────────────────────────── */
+async function guardarCV(silencioso = false) {
+  const btn = document.getElementById('btn-guardar');
+  if (!silencioso) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Guardando...';
+  }
+
+  const datos = recolectarDatos();
+
+  try {
+    const res = await fetch('save.php', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(datos),
+    });
+
+    const json = await res.json();
+
+    if (json.ok) {
+      estado.codigo = json.codigo;
+
+      // Mostrar URL del CV
+      const urlCompleta = window.location.origin + window.location.pathname.replace('index.html','') + json.url;
+      const urlBox = document.getElementById('url-box');
+      document.getElementById('url-texto').textContent   = urlCompleta;
+      document.getElementById('url-enlace').href         = json.url;
+      urlBox.style.display = 'flex';
+
+      // Actualizar URL del navegador sin recargar
+      history.replaceState({}, '', `?id=${json.codigo}`);
+
+      // Mostrar botón "Ver CV"
+      document.getElementById('btn-ver-cv').style.display = 'inline-flex';
+
+      if (!silencioso) mostrarToast('✅ CV guardado correctamente.', 'success');
+    } else {
+      mostrarToast('❌ ' + (json.error || 'Error al guardar.'), 'error');
+    }
+  } catch (err) {
+    mostrarToast('❌ Error de conexión con el servidor.', 'error');
+    console.error(err);
+  } finally {
+    if (!silencioso) {
+      btn.disabled = false;
+      btn.innerHTML = '💾 Guardar';
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   CARGAR CV EXISTENTE
+───────────────────────────────────────────────────────── */
+async function cargarCV(codigo) {
+  mostrarToast('⏳ Cargando tu CV...', '');
+  try {
+    const res  = await fetch(`load.php?id=${encodeURIComponent(codigo)}`);
+    const json = await res.json();
+
+    if (!json.ok) { mostrarToast('CV no encontrado.', 'error'); return; }
+
+    estado.codigo = json.codigo;
+
+    // Poblar datos personales
+    const p = json.personal || {};
+    document.getElementById('nombres').value    = p.nombres    || '';
+    document.getElementById('apellidos').value  = p.apellidos  || '';
+    document.getElementById('titulo').value     = p.titulo     || '';
+    document.getElementById('telefono').value   = p.telefono   || '';
+    document.getElementById('correo').value     = p.correo     || '';
+    document.getElementById('ciudad').value     = p.ciudad     || '';
+    document.getElementById('pais').value       = p.pais       || '';
+    document.getElementById('linkedin').value   = p.linkedin   || '';
+    document.getElementById('portafolio').value = p.portafolio || '';
+    document.getElementById('resumen').value    = p.resumen    || '';
+
+    if (p.foto) {
+      document.getElementById('foto-preview').innerHTML = `<img src="${p.foto}" alt="Foto">`;
+    }
+
+    // Limpiar listas predeterminadas y cargar datos
+    document.getElementById('lista-experiencia').innerHTML = '';
+    document.getElementById('lista-formacion').innerHTML   = '';
+    idExpCounter = 0; idFormCounter = 0;
+
+    (json.experiencia || []).forEach(exp => {
+      agregarExperiencia();
+      const id = idExpCounter - 1;
+      const card = document.getElementById(`exp-${id}`);
+      if (!card) return;
+      card.querySelector('.exp-cargo').value             = exp.cargo             || '';
+      card.querySelector('.exp-empresa').value           = exp.empresa           || '';
+      card.querySelector('.exp-ubicacion').value         = exp.ubicacion         || '';
+      card.querySelector('.exp-inicio').value            = exp.fecha_inicio      || '';
+      card.querySelector('.exp-fin').value               = exp.fecha_fin         || '';
+      card.querySelector('.exp-responsabilidades').value = exp.responsabilidades || '';
+      card.querySelector('.exp-logros').value            = exp.logros            || '';
+      if (exp.actual == '1') {
+        const cb = card.querySelector('.exp-actual');
+        cb.checked = true;
+        toggleActual(cb, `exp-fin-${id}`);
+      }
+    });
+
+    (json.formacion || []).forEach(f => {
+      agregarFormacion();
+      const id = idFormCounter - 1;
+      const card = document.getElementById(`form-${id}`);
+      if (!card) return;
+      card.querySelector('.form-titulo').value = f.titulo_obtenido || '';
+      card.querySelector('.form-inst').value   = f.institucion     || '';
+      card.querySelector('.form-anio').value   = f.anio_graduacion || '';
+    });
+
+    estado.habilidades = json.habilidades || [];
+    estado.idiomas     = json.idiomas     || [];
+    estado.adicionales = json.adicionales || [];
+
+    renderHabilidades();
+    renderIdiomas();
+    renderAdicionales();
+
+    // Mostrar URL
+    const urlCompleta = window.location.origin + window.location.pathname.replace('index.html','') + 'cv.php?id=' + json.codigo;
+    document.getElementById('url-texto').textContent = urlCompleta;
+    document.getElementById('url-enlace').href       = 'cv.php?id=' + json.codigo;
+    document.getElementById('url-box').style.display = 'flex';
+    document.getElementById('btn-ver-cv').style.display = 'inline-flex';
+
+    mostrarToast('✅ CV cargado.', 'success');
+    actualizarPreview();
+
+  } catch (err) {
+    mostrarToast('Error al cargar el CV.', 'error');
+    console.error(err);
+  }
+}
+
+function verCV() {
+  if (estado.codigo) window.open(`cv.php?id=${estado.codigo}`, '_blank');
+}
+
+function copiarURL() {
+  const texto = document.getElementById('url-texto').textContent;
+  navigator.clipboard.writeText(texto).then(() => {
+    mostrarToast('✅ URL copiada al portapapeles.', 'success');
+  });
+}
+
+/* ─────────────────────────────────────────────────────────
+   VISTA PREVIA EN TIEMPO REAL
+───────────────────────────────────────────────────────── */
+let previewTimer = null;
+
+function actualizarPreview() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => {
+    const datos   = recolectarDatos();
+    const iframe  = document.getElementById('preview-iframe');
+    const doc     = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(generarHTMLPreview(datos));
+    doc.close();
+  }, 250); // Debounce de 250ms
+}
+
+function ajustarZoomPreview() {
+  const iframe = document.getElementById('preview-iframe');
+  const panel  = iframe.parentElement;
+  const ancho  = panel.clientWidth;
+  const zoom   = ancho / 794; // 794px ≈ 210mm a 96dpi
+  iframe.style.transform = `scale(${zoom})`;
+  iframe.style.width     = `${100 / zoom}%`;
+  iframe.style.height    = `${(panel.clientHeight - 40) / zoom}px`;
+}
+
+/* Genera el HTML completo del CV para el iframe */
+function generarHTMLPreview(d) {
+  const p = d.personal || {};
+  const nombreCompleto = [p.nombres, p.apellidos].filter(Boolean).join(' ');
+
+  // Niveles de habilidades
+  const pct   = { basico: 33, intermedio: 66, avanzado: 100 };
+  const nlabel = { basico: 'Básico', intermedio: 'Intermedio', avanzado: 'Avanzado' };
+
+  const formatFecha = (f) => {
+    if (!f) return '';
+    const dt = new Date(f + 'T00:00:00');
+    return dt.toLocaleDateString('es-CO', { month: 'short', year: 'numeric' });
+  };
+
+  const esc = (s) => (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  const habTecnicas = (d.habilidades || []).filter(h => h.tipo === 'tecnica');
+  const habBlandas  = (d.habilidades || []).filter(h => h.tipo === 'blanda');
+  const nivelColors = {A1:'#e8f5e9',A2:'#c8e6c9',B1:'#a5d6a7',B2:'#66bb6a',C1:'#43a047',C2:'#2e7d32',Nativo:'#1b5e20'};
+
+  return `<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="preview.css">
+    <style>body{margin:0;padding:0;background:#f0f4f8}</style>
+  </head><body>
+  <div class="cv-contenedor">
+    <header class="cv-header">
+      ${p.foto ? `<div class="cv-foto-wrap"><img src="${esc(p.foto)}" class="cv-foto"></div>` : ''}
+      <div class="cv-header-info">
+        <h1 class="cv-nombre">${esc(nombreCompleto) || 'Tu Nombre'}</h1>
+        ${p.titulo ? `<p class="cv-titulo">${esc(p.titulo)}</p>` : ''}
+        <div class="cv-contacto">
+          ${p.correo    ? `<span>✉ ${esc(p.correo)}</span>` : ''}
+          ${p.telefono  ? `<span>📞 ${esc(p.telefono)}</span>` : ''}
+          ${(p.ciudad||p.pais) ? `<span>📍 ${esc([p.ciudad,p.pais].filter(Boolean).join(', '))}</span>` : ''}
+          ${p.linkedin  ? `<span>🔗 LinkedIn</span>` : ''}
+        </div>
+      </div>
+    </header>
+
+    <div class="cv-cuerpo">
+      <aside class="cv-sidebar">
+        ${habTecnicas.length || habBlandas.length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Habilidades</h2>
+          ${habTecnicas.length ? '<p class="hab-subtitulo">Técnicas</p>' : ''}
+          ${habTecnicas.map(h => `
+            <div class="habilidad-item">
+              <span class="hab-nombre">${esc(h.nombre)}</span>
+              <div class="hab-barra-bg"><div class="hab-barra" style="width:${pct[h.nivel]||50}%"></div></div>
+              <span class="hab-nivel">${nlabel[h.nivel]||''}</span>
+            </div>`).join('')}
+          ${habBlandas.length ? '<p class="hab-subtitulo" style="margin-top:8px">Blandas</p>' : ''}
+          ${habBlandas.map(h => `
+            <div class="habilidad-item">
+              <span class="hab-nombre">${esc(h.nombre)}</span>
+              <div class="hab-barra-bg"><div class="hab-barra hab-blanda" style="width:${pct[h.nivel]||50}%"></div></div>
+              <span class="hab-nivel">${nlabel[h.nivel]||''}</span>
+            </div>`).join('')}
+        </section>` : ''}
+
+        ${d.idiomas?.length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Idiomas</h2>
+          ${d.idiomas.map(i => `
+            <div class="idioma-item">
+              <span class="idioma-nombre">${esc(i.idioma)}</span>
+              <span class="idioma-nivel" style="background:${nivelColors[i.nivel]||'#eee'}">${esc(i.nivel)}</span>
+            </div>`).join('')}
+        </section>` : ''}
+
+        ${(d.adicionales||[]).filter(a=>a.tipo==='herramienta').length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Herramientas</h2>
+          ${(d.adicionales||[]).filter(a=>a.tipo==='herramienta').map(a =>
+            `<span class="adicional-chip">${esc(a.titulo)}</span>`).join('')}
+        </section>` : ''}
+      </aside>
+
+      <main class="cv-main">
+        ${p.resumen ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Perfil Profesional</h2>
+          <p class="cv-resumen">${esc(p.resumen).replace(/\n/g,'<br>')}</p>
+        </section>` : ''}
+
+        ${d.experiencia?.filter(e => e.cargo || e.empresa).length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Experiencia Laboral</h2>
+          ${d.experiencia.filter(e=>e.cargo||e.empresa).map(e => {
+            const fi = formatFecha(e.fecha_inicio);
+            const ff = e.actual ? 'Presente' : formatFecha(e.fecha_fin);
+            const rango = [fi,ff].filter(Boolean).join(' – ');
+            return `<div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-contenido">
+                <div class="timeline-header">
+                  <strong>${esc(e.cargo)}</strong>
+                  ${rango ? `<span class="timeline-fecha">${rango}</span>` : ''}
+                </div>
+                <div class="timeline-empresa">${esc(e.empresa)}${e.ubicacion?' · '+esc(e.ubicacion):''}</div>
+                ${e.responsabilidades?`<p class="timeline-desc">${esc(e.responsabilidades).replace(/\n/g,'<br>')}</p>`:''}
+                ${e.logros?`<p class="timeline-logros">✓ ${esc(e.logros).replace(/\n/g,'<br>')}</p>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </section>` : ''}
+
+        ${d.formacion?.filter(f => f.titulo_obtenido || f.institucion).length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Formación Académica</h2>
+          ${d.formacion.filter(f=>f.titulo_obtenido||f.institucion).map(f => `
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-contenido">
+                <div class="timeline-header">
+                  <strong>${esc(f.titulo_obtenido)}</strong>
+                  ${f.anio_graduacion?`<span class="timeline-fecha">${f.anio_graduacion}</span>`:''}
+                </div>
+                <div class="timeline-empresa">${esc(f.institucion)}</div>
+              </div>
+            </div>`).join('')}
+        </section>` : ''}
+
+        ${(d.adicionales||[]).filter(a=>a.tipo==='curso').length ? `
+        <section class="cv-seccion">
+          <h2 class="cv-sec-titulo">Cursos y Certificaciones</h2>
+          ${(d.adicionales||[]).filter(a=>a.tipo==='curso').map(a => `
+            <div class="adicional-item">
+              <strong>${esc(a.titulo)}</strong>
+              ${a.fecha?`<span class="adicional-fecha">${esc(a.fecha)}</span>`:''}
+              ${a.descripcion?`<p>${esc(a.descripcion)}</p>`:''}
+            </div>`).join('')}
+        </section>` : ''}
+      </main>
+    </div>
+  </div>
+  </body></html>`;
+}
+
+/* ─────────────────────────────────────────────────────────
+   TOAST DE NOTIFICACIONES
+───────────────────────────────────────────────────────── */
+let toastTimer;
+function mostrarToast(mensaje, tipo = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = mensaje;
+  toast.className   = `toast visible ${tipo}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('visible');
+  }, 3000);
+}
+</script>
+
+</body>
+</html>

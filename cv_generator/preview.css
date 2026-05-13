@@ -1,0 +1,328 @@
+/* ============================================================
+   preview.css — Estilos del CV para vista, impresión y PDF
+   Optimizado para A4: 210mm × 297mm
+   ============================================================ */
+
+/* ── Variables del CV ─────────────────────────────────────── */
+:root {
+  --cv-primary:    #1e3a5f;
+  --cv-accent:     #2563eb;
+  --cv-sidebar:    #1e3a5f;
+  --cv-sidebar-fg: #ffffff;
+  --cv-light:      #dbeafe;
+  --cv-text:       #1e293b;
+  --cv-muted:      #64748b;
+  --cv-border:     #e2e8f0;
+  --cv-font:       'Georgia', 'Times New Roman', serif;
+  --cv-font-sans:  'Segoe UI', Arial, sans-serif;
+}
+
+/* ── Reset del CV ─────────────────────────────────────────── */
+.cv-contenedor *, .cv-contenedor *::before, .cv-contenedor *::after {
+  box-sizing: border-box;
+}
+
+/* ── Contenedor principal A4 ──────────────────────────────── */
+.cv-contenedor {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  background: #ffffff;
+  font-family: var(--cv-font-sans);
+  color: var(--cv-text);
+  font-size: 9.5pt;
+  line-height: 1.5;
+  box-shadow: 0 4px 40px rgba(0,0,0,.15);
+}
+
+/* ── ENCABEZADO ───────────────────────────────────────────── */
+.cv-header {
+  background: var(--cv-sidebar);
+  color: var(--cv-sidebar-fg);
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cv-foto-wrap {
+  flex-shrink: 0;
+}
+.cv-foto {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,.4);
+}
+
+.cv-header-info { flex: 1; }
+
+.cv-nombre {
+  font-family: var(--cv-font);
+  font-size: 22pt;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.3px;
+  margin-bottom: 4px;
+}
+
+.cv-titulo {
+  font-size: 11pt;
+  font-weight: 400;
+  color: rgba(255,255,255,.8);
+  letter-spacing: .3px;
+  margin-bottom: 10px;
+}
+
+.cv-contacto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 8pt;
+  color: rgba(255,255,255,.85);
+}
+.cv-contacto a { color: rgba(255,255,255,.9); text-decoration: underline; }
+
+/* ── CUERPO: dos columnas ─────────────────────────────────── */
+.cv-cuerpo {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: calc(297mm - 150px);
+}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.cv-sidebar {
+  background: #f0f4f8;
+  padding: 20px 16px;
+  border-right: 2px solid var(--cv-light);
+}
+
+/* ── COLUMNA PRINCIPAL ────────────────────────────────────── */
+.cv-main {
+  padding: 20px 24px;
+}
+
+/* ── SECCIONES ────────────────────────────────────────────── */
+.cv-seccion {
+  margin-bottom: 18px;
+}
+
+.cv-sec-titulo {
+  font-family: var(--cv-font-sans);
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--cv-accent);
+  border-bottom: 2px solid var(--cv-accent);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+/* ── RESUMEN PROFESIONAL ──────────────────────────────────── */
+.cv-resumen {
+  font-size: 9pt;
+  color: var(--cv-text);
+  line-height: 1.65;
+  text-align: justify;
+}
+
+/* ── TIMELINE (Experiencia / Formación) ───────────────────── */
+.timeline-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 5px; top: 18px;
+  width: 1px;
+  height: calc(100% - 6px);
+  background: var(--cv-border);
+}
+
+.timeline-dot {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--cv-accent);
+  border: 2px solid white;
+  outline: 2px solid var(--cv-accent);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.timeline-contenido { flex: 1; }
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.timeline-header strong {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: var(--cv-text);
+  line-height: 1.3;
+}
+.timeline-fecha {
+  font-size: 7.5pt;
+  color: var(--cv-muted);
+  white-space: nowrap;
+  font-style: italic;
+}
+.timeline-empresa {
+  font-size: 8.5pt;
+  color: var(--cv-accent);
+  font-weight: 600;
+  margin: 2px 0 4px;
+}
+.timeline-desc {
+  font-size: 8.5pt;
+  color: var(--cv-text);
+  line-height: 1.55;
+  margin-bottom: 3px;
+}
+.timeline-logros {
+  font-size: 8.5pt;
+  color: #15803d;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+/* ── HABILIDADES ──────────────────────────────────────────── */
+.hab-subtitulo {
+  font-size: 7.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--cv-muted);
+  margin-bottom: 6px;
+}
+.habilidad-item {
+  margin-bottom: 7px;
+}
+.hab-nombre {
+  display: block;
+  font-size: 8.5pt;
+  font-weight: 600;
+  color: var(--cv-text);
+  margin-bottom: 3px;
+}
+.hab-barra-bg {
+  height: 5px;
+  background: #dde2e8;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+.hab-barra {
+  height: 100%;
+  background: var(--cv-accent);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.hab-blanda { background: #be185d; }
+.hab-nivel {
+  font-size: 7pt;
+  color: var(--cv-muted);
+}
+
+/* ── IDIOMAS ──────────────────────────────────────────────── */
+.idioma-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.idioma-nombre {
+  font-size: 8.5pt;
+  font-weight: 600;
+  color: var(--cv-text);
+  flex: 1;
+}
+.idioma-nivel {
+  font-size: 7pt;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  color: #1a5c2e;
+  white-space: nowrap;
+}
+.idioma-cert {
+  width: 100%;
+  font-size: 7pt;
+  color: var(--cv-muted);
+  font-style: italic;
+}
+
+/* ── SECCIONES ADICIONALES ────────────────────────────────── */
+.adicional-item {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cv-border);
+}
+.adicional-item:last-child { border-bottom: none; }
+.adicional-item strong { font-size: 9pt; font-weight: 700; display: block; }
+.adicional-item p { font-size: 8.5pt; color: var(--cv-muted); margin-top: 2px; }
+.adicional-fecha {
+  font-size: 7.5pt;
+  color: var(--cv-muted);
+  font-style: italic;
+  margin-left: 8px;
+}
+.adicional-chip {
+  display: inline-block;
+  background: var(--cv-light);
+  color: var(--cv-accent);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 7.5pt;
+  font-weight: 600;
+  margin: 3px 3px 3px 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ESTILOS DE IMPRESIÓN Y PDF
+   ══════════════════════════════════════════════════════════ */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 210mm;
+  }
+
+  body { background: white; }
+
+  .cv-contenedor {
+    width: 210mm;
+    box-shadow: none;
+    page-break-after: always;
+  }
+
+  /* Evitar cortes dentro de items */
+  .timeline-item,
+  .habilidad-item,
+  .idioma-item,
+  .adicional-item,
+  .cv-seccion {
+    page-break-inside: avoid;
+  }
+
+  /* Asegurar que los colores de fondo se impriman */
+  .cv-header         { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cv-sidebar        { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hab-barra         { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .idioma-nivel      { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .adicional-chip    { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .timeline-dot      { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
