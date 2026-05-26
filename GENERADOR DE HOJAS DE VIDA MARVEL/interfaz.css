@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Roboto&display=swap');
+
+body {
+    background-color: #1a1a2e;
+    background-image: url('https://i.pinimg.com/736x/0c/6c/42/0c6c42bca83df6385bb24024654b97ad.jpg');
+    font-family: 'Roboto', sans-serif;
+    color: write;
+    margin: 0;
+    padding: 20px;
+}
+
+#formulario {
+    background-color: #16213e;
+    border: 3px solid #e23636;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+#formulario h1 {
+    font-family: 'Bangers', cursive;
+    color: #e23636;
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 2px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    background-color: #0f3460;
+    border: 2px solid #e23636;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    box-sizing: border-box;
+
+}
+
+#formulario button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #e23636;
+    color: white;
+    font-family: 'Bangers', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#formulario button:hover {
+    background-color: #ff0000;
+
+}
+
+#contenido-hv {
+    background-color: #16213e;
+    border: 3px solid #e23636;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    color: white;
+}
+
+#hv-cargo {
+    text-align: center;
+    font-size: 16px;
+    color: #aaaaaa;
+}
+
+hr {
+    border-color: #e23636;
+    margin: 15px 0;
+}
+
+#hoja button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    font-family: 'bangers', cursive;
+    font-size: 18px;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#hoja button:first-of-type {
+    background-color: #e23636;
+    color:white;
+}
+#hoja button:last-of-type {
+    background-color: #0f3460;
+    color: white;
+    border: 2px solid #e23636;
+}
+#contenido-hv p,
+#contenido-hv span,
+#contenido-hv strong {
+    color: white !important;
+}
+
+#hv-nombre {
+    color: #e23636 !important;
+}
+
+#hv-heroe {
+    color: #f5a623 !important;
+}
+
+#hv-cargo {
+    color: #cccccc !important;
+}

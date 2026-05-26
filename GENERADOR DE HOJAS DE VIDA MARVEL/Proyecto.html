@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTRO PARA NUEVOS VENGADORES</title>
+    <link rel="stylesheet" href="interfaz.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <div id="formulario">
+        <h1> GENERADOR DE HOJAS DE VIDA PARA NUEVO AGENTE DE S.H.I.E.L.D</h1>
+
+        <input type="text" id="nombre" placeholder="Ingresa tu nombre completo: ">
+        <input type="text" id="heroe" placeholder="Ingresa tu superheroe de inspiracion: (eje: Spider-Man)">
+        <input type="text" id="cargo" placeholder="Ingrese su cargo o profesion (ej: X-MEN)">
+        <textarea id="descripcion" placeholder="Descripcion sobre su persona"></textarea> 
+        <input type="text" id="habilidades" placeholder="Tus habilidades son (EJ: Python, html, JS)">
+        <input type="text" id="experiencia" placeholder="Experiencia laboral">
+        <input type="text" id="educacion" placeholder="Educacion (eje: Universidad de nueva york )">
+
+        <button onclick="generarHV()">Generar la hoja de vida</button>
+    </div>
+
+    <div id="hoja" style="display:none;">
+        <div id="contenido-hv">
+            <h2 id="hv-nombre"></h2>
+            <h3 id="hv-heroe"></h3>
+            <p id="hv-cargo"></p>
+            <hr>
+            <p><strong>Sobre mi: </strong> <span id="hv-descripcion"></span></p>
+            <p><strong>Habilidades:</strong><span id="hv-habilidades"></span></p>
+            <p><strong>Experiencia:</strong><span id="hv-experiencia"></span></p>
+            <p><strong>Educacion:</strong><span id="hv-educacion"></span></p>
+        </div>
+        <button onclick="exportarPDF()">Descargar PDF</button>
+        <button onclick="volver()">Volver</button>
+    </div>
+
+    <script src="java.js"></script>
+   </body>
+   </html>
