@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Hoja de Vida Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="loader" id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Generando documento</div>
+</div>
+
+
+<div id="form-page">
+  <div class="form-eyebrow">Hoja de vida</div>
+  <h1 class="form-headline">Crea tu <em>perfil</em> profesional</h1>
+  <p class="form-subtitle">Complete todos los campos para una hoja de vida completa</p>
+
+  <div class="form-card">
+
+    <div class="sec-lbl">Datos personales</div>
+    <div class="field" style="text-align:center;margin-bottom:28px;">
+      <label>Foto de perfil</label>
+      <div class="photo-upload-area" onclick="document.getElementById('f-foto').click()">
+        <div id="photo-preview">
+          <div class="photo-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span>Subir foto</span>
+          </div>
+        </div>
+      </div>
+      <input type="file" id="f-foto" accept="image/*" style="display:none" onchange="previewFoto(event)" />
+    </div>
+
+    <div class="form-row">
+      <div class="field"><label>Nombre completo</label><input id="f-nombre" type="text" placeholder="Ej: Laura Colomer Ruiz" /></div>
+      <div class="field"><label>Cargo / Profesión</label><input id="f-cargo" type="text" placeholder="Ej: Diseñadora UX Senior" /></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Fecha de nacimiento</label><input id="f-nacimiento" type="text" placeholder="Ej: 15 de marzo de 1990" /></div>
+      <div class="field"><label>Nacionalidad</label><input id="f-nacionalidad" type="text" placeholder="Ej: Colombiana" /></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Cédula / Documento</label><input id="f-cedula" type="text" placeholder="Ej: C.C. 1.234.567.890" /></div>
+      <div class="field"><label>Estado civil</label>
+        <select id="f-estado">
+          <option value="">Seleccione...</option>
+          <option>Soltero/a</option><option>Casado/a</option><option>Unión libre</option><option>Divorciado/a</option><option>Viudo/a</option>
+        </select>
+      </div>
+    </div>
+
+    
+    <div class="sec-lbl">Información de contacto</div>
+    <div class="form-row">
+      <div class="field"><label>Correo electrónico</label><input id="f-email" type="text" placeholder="correo@ejemplo.com" /></div>
+      <div class="field"><label>Teléfono / Celular</label><input id="f-telefono" type="text" placeholder="+57 300 000 0000" /></div>
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Ciudad y país</label><input id="f-ciudad" type="text" placeholder="Bogotá, Colombia" /></div>
+      <div class="field"><label>Dirección</label><input id="f-direccion" type="text" placeholder="Ej: Cra 7 # 45-23, Chapinero" /></div>
+    </div>
+
+    
+    <div class="sec-lbl">Perfil profesional</div>
+    <div class="field">
+      <label>Resumen profesional</label>
+      <textarea id="f-perfil" style="min-height:100px;" placeholder="Breve descripción sobre usted, su enfoque, logros clave y lo que lo distingue. Recomendado: 3-5 oraciones impactantes."></textarea>
+    </div>
+    <div class="field">
+      <label>Objetivo profesional</label>
+      <textarea id="f-objetivo" placeholder="¿Qué posición busca y qué valor puede aportar a la organización?"></textarea>
+    </div>
+
+    
+    <div class="sec-lbl">Experiencia laboral</div>
+    <div id="exp-container"></div>
+    <button class="add-btn" onclick="addExp()">+ Agregar experiencia</button>
+
+  
+    <div class="sec-lbl">Formación académica</div>
+    <div id="edu-container"></div>
+    <button class="add-btn" onclick="addEdu()">+ Agregar formación</button>
+
+    <div class="sec-lbl">Certificaciones y cursos</div>
+    <div id="cert-container"></div>
+    <button class="add-btn" onclick="addCert()">+ Agregar certificación</button>
+
+  
+    <div class="sec-lbl">Habilidades</div>
+    <div class="form-row">
+      <div class="field">
+        <label>Habilidades técnicas <span style="color:var(--text-dim);font-size:.6rem;">(coma)</span></label>
+        <input id="f-htec" type="text" placeholder="Python, Excel Avanzado, AutoCAD, SQL" />
+      </div>
+      <div class="field">
+        <label>Habilidades blandas <span style="color:var(--text-dim);font-size:.6rem;">(coma)</span></label>
+        <input id="f-hbland" type="text" placeholder="Liderazgo, Comunicación, Negociación" />
+      </div>
+    </div>
+
+   
+    <div class="sec-lbl">Idiomas</div>
+    <div id="lang-container"></div>
+    <button class="add-btn" onclick="addLang()">+ Agregar idioma</button>
+
+   
+    <div class="sec-lbl">Referencias</div>
+    <div id="ref-container"></div>
+    <button class="add-btn" onclick="addRef()">+ Agregar referencia</button>
+    <div style="margin-bottom:20px;">
+      <label style="display:flex;align-items:center;gap:12px;cursor:pointer;font-size:.65rem;letter-spacing:2px;color:var(--text-muted);">
+        <input type="checkbox" id="f-ref-solicitud" style="width:auto;border-bottom:none;padding:0;" />
+        Mostrar "Referencias disponibles a solicitud"
+      </label>
+    </div>
+
+    <button class="btn-gen" onclick="generar()"><span>Generar hoja de vida completa</span></button>
+  </div>
+</div>
+
+
+<div id="cv-page">
+  <div class="cv-toolbar">
+    <div class="cv-toolbar-brand">Hoja de Vida</div>
+    <div class="toolbar-btns">
+      <button class="tbtn tbtn-primary" onclick="window.print()">Descargar PDF</button>
+      <button class="tbtn tbtn-outline" onclick="volver()">Volver</button>
+    </div>
+  </div>
+
+  <div class="cv-doc" id="cv-print">
+    <div class="doc-header">
+      <div class="doc-header-inner">
+        <div>
+          <div class="doc-name" id="cv-nombre">NOMBRE</div>
+          <div class="doc-role" id="cv-cargo">Cargo</div>
+          <div class="doc-datos" id="cv-datos"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px;">
+          <img id="cv-foto" class="doc-photo" src="" alt="" style="display:none;" />
+          <div class="doc-contact-block" id="cv-contacto"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-body">
+      <div class="doc-main">
+        <div class="doc-section" id="sec-perfil">
+          <div class="doc-section-title">Perfil profesional</div>
+          <p class="doc-profile-text" id="cv-perfil"></p>
+          <p class="doc-objetivo" id="cv-objetivo"></p>
+        </div>
+        <div class="doc-section" id="sec-exp">
+          <div class="doc-section-title">Experiencia laboral</div>
+          <div id="cv-exp-list"></div>
+        </div>
+        <div class="doc-section" id="sec-edu">
+          <div class="doc-section-title">Formación académica</div>
+          <div id="cv-edu-list"></div>
+        </div>
+        <div class="doc-section" id="sec-cert" style="display:none;">
+          <div class="doc-section-title">Certificaciones y cursos</div>
+          <div id="cv-cert-list"></div>
+        </div>
+      </div>
+
+      <div class="doc-side">
+        <div class="side-section" id="sec-htec" style="display:none;">
+          <div class="side-title">Habilidades técnicas</div>
+          <div id="cv-htec"></div>
+        </div>
+        <div class="side-section" id="sec-hbland" style="display:none;">
+          <div class="side-title">Habilidades blandas</div>
+          <div id="cv-hbland"></div>
+        </div>
+        <div class="side-section" id="sec-idiomas">
+          <div class="side-title">Idiomas</div>
+          <div id="cv-idiomas"></div>
+        </div>
+        <div class="side-section" id="sec-refs">
+          <div class="side-title">Referencias</div>
+          <div id="cv-refs"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-footer">
+      <div class="doc-footer-line"></div>
+      <div class="doc-footer-text" id="cv-footer">Hoja de vida</div>
+      <div class="doc-footer-line"></div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
